@@ -78,10 +78,10 @@ func AuthMidlleware() gin.HandlerFunc {
 
 // AuthUseCaseImpl реализует UserUseCases
 
-func initAuthUseCase(log logger.Logger) implementationUseCase.AuthUseCase {
-	return *implementationUseCase.NewAuthUseCase(log)
-	// Не нужно передавать пустую DTO, use case должен работать с интерфейсами
-}
+// func initAuthUseCase(log logger.Logger) implementationUseCase.AuthUseCase {
+// 	return *implementationUseCase.NewAuthUseCase(log)
+// 	// Не нужно передавать пустую DTO, use case должен работать с интерфейсами
+// }
 
 /* Инициализация контроллера */
 
@@ -105,9 +105,9 @@ func main() {
 		Handler: routs,
 	}
 
-	log.PtintInfo(context.Background(), "Starting server on :8080")
+	log.PtintInfo(context.Background(), "Стартуем сервер на порте :8080")
 	if err := server.ListenAndServe(); err != nil {
-		log.PrintError(context.TODO(), "Server failed to start", err)
+		log.PrintError(context.TODO(), "Сервер не стартонул", err)
 	}
 
 	// // маршрут с middleware

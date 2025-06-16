@@ -2,7 +2,7 @@ package dto
 
 type UserDTO struct {
 	ID          int    `json:"id,omitempty"`
-	Password    string `json:"password" validate:"required,password"` // Пароль исключается из JSON
+	Password    string `json:"password" validate:"required,password"`
 	Name        string `json:"name,omitempty"`
 	Role        string `json:"role,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
