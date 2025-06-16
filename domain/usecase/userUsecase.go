@@ -53,29 +53,3 @@ type AuthUseCase struct {
 	Email    string
 	Password string
 }
-
-// type UserService struct {
-//     // зависимости
-
-// 	// 1. Репозиторий для работы с пользователями
-//     userRepo UserRepository
-
-//     // 2. Сервис аутентификации
-//     authService AuthService
-
-//     // 3. Сервис для работы с файловой системой
-//     fileSystem FileSystemService
-
-//     // 4. Логгер
-//     logger Logger
-
-//     // 5. Сервис валидации
-//     validator Validator
-
-//     // 6. Генератор токенов (JWT и т.д.)
-//     tokenGenerator TokenService
-
-//     // 7. Конфигурация
-//     config Config
-
-// }
