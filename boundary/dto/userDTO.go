@@ -15,7 +15,3 @@ func NewUserDTO(email, password string) *UserDTO {
 		Password: password,
 	}
 }
-
-// func SendToUseCase(u *UserDTO){
-//    dtoToUsecase:= &u
-// }

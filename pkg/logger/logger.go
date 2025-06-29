@@ -7,8 +7,8 @@ import (
 
 type Logger struct{}
 
-func InitLogger() *Logger {
-	return &Logger{}
+func InitLogger() Logger {
+	return Logger{}
 }
 
 func (l Logger) PtintInfo(ctx context.Context, message string) {

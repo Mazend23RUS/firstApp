@@ -1,36 +1,36 @@
-package routing
+package server
 
 import (
 	"github.com/alexey/adapters/controllers"
-	"github.com/gin-gonic/gin"
+	serverinterface "github.com/alexey/infrastructure/restServer"
 )
 
-func SetupRouter(authController *controllers.UserController) *gin.Engine {
+type Routing interface {
+	RoutingServer()
+}
 
-	rout := gin.New()
+func (rout *Rout) RoutingServer() {
+	rout.RegisterPublicRoute()
+}
 
-	// Глобальные middleware
-	rout.Use(gin.Logger())
-	rout.Use(gin.Recovery())
+type Rout struct {
+	server     serverinterface.Server
+	controller controllers.UserController
+}
 
-	// Public routes
-	public := rout.Group("/api/ver")
-	{
-		public.POST("/login", gin.WrapF(authController.Logger))
-		public.GET("/heep", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{"status": "ok"})
-		})
-
+func SetupRouter(server serverinterface.Server, contr controllers.UserController) *Rout {
+	router := &Rout{
+		controller: contr,
+		server:     server,
 	}
+	router.RoutingServer() /* Вызываем регистрацию маршрутов */
+	return router
 
-	// Protected routes (with auth middleware)
-	// protected := rout.Group("/api/v1")
-	// protected.Use()
-	// {
-	// 	protected.GET("/profile", gin.WrapF(authController.ProfileHandler))
-	// 	protected.POST("/logout", gin.WrapF(authController.LogoutHandler))
-	// }
+}
 
-	return rout
+func (rout *Rout) RegisterPublicRoute() {
+
+	rout.server.RegisterPublicRoute("POST", "/auth/user", rout.controller.LoginHandler)
+	// rout.server.RegisterPublicRoute("POST", "/auth/botton", rout.controller.ButtonHandler)
 
 }

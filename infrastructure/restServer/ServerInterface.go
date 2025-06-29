@@ -1,4 +1,4 @@
-package Server
+package serverinterface
 
 import (
 	"net/http"

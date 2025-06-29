@@ -1,90 +1,127 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"github.com/alexey/adapters/controllers/rest/requests"
 	usecase "github.com/alexey/boundary/domain/useCase"
 	"github.com/alexey/boundary/dto"
-	implementationUseCase "github.com/alexey/domain/usecase"
+
+	"github.com/alexey/internal/interfaces"
 	"github.com/alexey/pkg/logger"
 )
 
-type UserController struct {
-	authUseCase implementationUseCase.AuthUseCase
-	logger      logger.Logger
+type BaseController struct {
+	reqvalid interfaces.RequestValidator
+	logger   logger.Logger
 }
 
-func NewController(auth implementationUseCase.AuthUseCase, log logger.Logger) *UserController {
+type UserController struct {
+	requestreader interfaces.RequestReader
+	// errhand     interfaces.ErrorHandler
+	response    interfaces.Responderface
+	authUseCase usecase.UserUsecase
+	BaseController
+}
 
-	return &UserController{
-		authUseCase: auth,
-		logger:      log,
+func NewController(
+
+	log logger.Logger,
+	valid interfaces.RequestValidator,
+	auth usecase.UserUsecase,
+	requtreader interfaces.RequestReader,
+	// errhandler interfaces.ErrorHandler,
+	response interfaces.Responderface,
+	// err  interfaces.ErrorHandler,
+
+) UserController {
+
+	return UserController{
+
+		BaseController: BaseController{
+			logger:   log,
+			reqvalid: valid,
+			// err: err,
+
+		}, authUseCase: auth,
+		requestreader: requtreader,
+		// errhand: errhandler,
+		response: response,
 	}
 }
 
-func (uc *UserController) Logger(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var req requests.LoginRequest
-	var but requests.IsSelected
-
-	// 1. Парсинг запроса
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		uc.logger.PrintError(ctx, "Не получается декодировать запрос", err)
-		http.Error(w, "Не верный запрос", http.StatusBadRequest)
+	/* Парсер запроса */
+	req, err := uc.requestreader.ReadLoginRequest(r)
+	if err != nil {
+		uc.response.ErrorResponse(w, err)
 		return
 	}
+	/* Валидация запроса */
+	// if err := uc.reqvalid.Validate(req); err != nil {
+	// 	uc.logger.PrintError(ctx, "Ошибка валидации", err)
+	// 	http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+	// 	return
+	// }
 
-	// 2. Валидация
-	if err := req.Validate(); err != nil {
-		uc.logger.PrintError(ctx, "Валидацию не прошел", err)
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
-		return
-	}
+	/* Получаем ответ */
+	tok, err := uc.authUseCase.GetUserAuthorities(ctx, *req)
 
-	otputdto := req.MapperOfRequestToDTO()
+	/* отправка ответа */
+	uc.response.SuccessResponse(w, tok)
+}
 
-	// 3. Вызов use case
+// func (uc *UserController) JsonSerialaser(r *http.Request, w http.ResponseWriter, req *requests.LoginRequest) []byte {
+// 	ctx := r.Context()
+// 	response := uc.GetResponseFromUseCaseAuthorities(w, r, req)
+// 	/* 5. Сериализация ответа */
+// 	jsonSerialaser, err := json.Marshal(response)
+// 	uc.logger.PtintInfo(ctx, "Отарабатывает сериализация")
+// 	if err != nil {
+// 		uc.logger.PrintError(ctx, "Не получилось сериализовать с помощью маршала ", err)
+// 		http.Error(w, "Ошибочка сервера", http.StatusInternalServerError)
+// 		return jsonSerialaser
+// 	}
+// 	return jsonSerialaser
+// }
+
+// func (uc *UserController) SendResponse(w http.ResponseWriter, r *http.Request, output usecase.UserAuthoritiesOutput, req *requests.LoginRequest) {
+// 	serialas := uc.JsonSerialaser(r, w, req)
+// 	ctx := r.Context()
+// 	/* 7. Отправка ответа */
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusOK)
+// 	if _, err := w.Write(serialas); err != nil {
+// 		uc.logger.PrintError(ctx, "Failed to write response", err)
+// 	}
+// }
+
+func (uc *UserController) ActiveteUseCaseAuthorities(outputDto dto.UserDTO, r *http.Request, w http.ResponseWriter) usecase.UserAuthoritiesOutput {
+	ctx := r.Context()
+
 	output, err := uc.authUseCase.GetUserAuthorities(ctx, dto.UserDTO{
-		Email:    otputdto.Email,
-		Password: otputdto.Password,
+		Password: outputDto.Password,
+		Email:    outputDto.Email,
 	})
 	uc.logger.PtintInfo(ctx, "Вызван usecase GetUserAuthorities")
 	if err != nil {
-		uc.logger.PrintError(ctx, "Все пошло по пиии", err)
-		http.Error(w, "Аунтификации пипец ", http.StatusUnauthorized)
-		return
+		uc.logger.PrintError(ctx, "", err)
+		http.Error(w, "Аунтификации не прошла ", http.StatusUnauthorized)
+		return *output
 	}
-
-	if err := uc.authUseCase.OpenPathGuider(ctx, but.Selected()); err != nil {
-		uc.logger.PrintError(ctx, "Path guider failed", err)
-		// Не прерываем выполнение, так как это дополнительная функциональность
-	}
-
-	// 4. Формирование ответа
-	response := usecase.UserAuthoritiesOutput{
-		Email:     output.Email,
-		Role:      output.Role,
-		Token:     output.Token,
-		ExpiresAt: output.ExpiresAt,
-	}
-
-	// 5. Сериализация ответа
-	jsonSerialaser, err := json.Marshal(response)
-	uc.logger.PtintInfo(ctx, "Отарабатывает сериализация")
-	if err != nil {
-		uc.logger.PrintError(ctx, "Не получилось сериализовать с помощью маршала ", err)
-		http.Error(w, "Ошибочка сервера", http.StatusInternalServerError)
-		return
-	}
-
-	// 7. Отправка ответа
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write(jsonSerialaser); err != nil {
-		uc.logger.PrintError(ctx, "Failed to write response", err)
-	}
-
+	return *output
 }
+
+// func (uc *UserController) GetResponseFromUseCaseAuthorities(w http.ResponseWriter, r *http.Request, req *requests.LoginRequest) usecase.UserAuthoritiesOutput {
+
+// 	otputdto, err := uc.parser.RequestToDto(req)
+// 	if err != nil {
+// 		fmt.Println("Ошибка получения дто")
+// 	}
+
+// 	/* 3. Вызов use case и получение ответа */
+// 	response := uc.ActiveteUseCaseAuthorities(otputdto, r, w)
+// 	return response
+
+// }

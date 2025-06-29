@@ -10,10 +10,22 @@ import (
 	"github.com/alexey/pkg/logger"
 )
 
+type AuthUseCase struct {
+	log logger.Logger
+	// AuthUseCase usecase.UserUsecase
+}
+
+func NewAuthUseCase(log logger.Logger) *AuthUseCase {
+	return &AuthUseCase{
+		// AuthUseCase: AuthUseCase{},
+		log: log,
+	}
+}
+
 func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) (*usecase.UserAuthoritiesOutput, error) {
 
 	if input.Email == "bboy23@mail.ru" && input.Password == "87654321" {
-		us.log.PtintInfo(c, "Введены данные Admin"+" email: "+input.Email+" password_Длинна: "+fmt.Sprint((len(input.Password))))
+		us.log.PtintInfo(c, "Введены данные Admin"+" email: "+input.Email)
 		return &usecase.UserAuthoritiesOutput{
 			Email:     input.Email,
 			Role:      "Admin",
@@ -29,8 +41,6 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) 
 		Token:     "168456ewq",
 		ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
 	}, nil
-
-	return nil, fmt.Errorf("Неверные данные на входе")
 }
 
 func (uc *AuthUseCase) OpenPathGuider(c context.Context, isOpenGuider bool) error {
@@ -40,16 +50,4 @@ func (uc *AuthUseCase) OpenPathGuider(c context.Context, isOpenGuider bool) erro
 	}
 	uc.log.PtintInfo(c, "Path guider opened successfully")
 	return nil
-}
-
-func NewAuthUseCase(log logger.Logger) *AuthUseCase {
-	return &AuthUseCase{
-		log: log,
-	}
-}
-
-type AuthUseCase struct {
-	log      logger.Logger
-	Email    string
-	Password string
 }
