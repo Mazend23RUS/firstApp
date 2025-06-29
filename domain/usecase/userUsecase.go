@@ -17,12 +17,22 @@ type AuthUseCase struct {
 
 func NewAuthUseCase(log logger.Logger) *AuthUseCase {
 	return &AuthUseCase{
-		// AuthUseCase: AuthUseCase{},
 		log: log,
 	}
 }
 
 func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) (*usecase.UserAuthoritiesOutput, error) {
+
+	if input.IsSelected == true {
+		if err := us.OpenPathGuider(c, input); err != nil {
+			return &usecase.UserAuthoritiesOutput{
+				Email:      input.Email,
+				Token:      "tokke-15654-5631-45$",
+				ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
+				IsSelected: "Поисковик открылся",
+			}, fmt.Errorf("Ошибка открытия окна", err)
+		}
+	}
 
 	if input.Email == "bboy23@mail.ru" && input.Password == "87654321" {
 		us.log.PtintInfo(c, "Введены данные Admin"+" email: "+input.Email)
@@ -43,11 +53,16 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) 
 	}, nil
 }
 
-func (uc *AuthUseCase) OpenPathGuider(c context.Context, isOpenGuider bool) error {
+func (us *AuthUseCase) OpenPathGuider(c context.Context, input dto.UserDTO) *usecase.UserAuthoritiesOutput {
+	if input.IsSelected == true {
+		us.log.PtintInfo(c, "Нажата кнопка открытия проводника")
+		return &usecase.UserAuthoritiesOutput{
+			Email:      input.Email,
+			Token:      "tokke-15654-5631-45$",
+			ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
+			IsSelected: "Поисковик открылся",
+		}
 
-	if !isOpenGuider {
-		return fmt.Errorf("guider not opened")
 	}
-	uc.log.PtintInfo(c, "Path guider opened successfully")
 	return nil
 }

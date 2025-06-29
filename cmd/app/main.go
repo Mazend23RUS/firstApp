@@ -24,7 +24,7 @@ func main() {
 	/* NewJSONRequestReader() инициализация читателя запросов */
 	readr := renderequests.NewJSONRequestReader()
 
-	/* NewResponseWriter() */
+	/* NewResponseWriter() инициализация ответа */
 	respo := renderequests.NewResponseWriter()
 
 	/* NewAuthUseCase() Инициализация use case */
@@ -32,11 +32,6 @@ func main() {
 
 	// /* Инициализация Валидатора */
 	validat := validator.NewValidator()
-
-	/* Инициализация парсера */
-	// parsers := infrastructure.NewParser(log)
-
-	/* Инициализация ответа */
 
 	/* NewController() инициализация контроллера */
 	contro := controllers.NewController(log, validat, authUseCase, readr, respo)

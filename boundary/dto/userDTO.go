@@ -7,11 +7,13 @@ type UserDTO struct {
 	Role        string `json:"role,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
 	Email       string `json:"email" validate:"required,email"`
+	IsSelected  bool   `json:"is_selected"`
 }
 
-func NewUserDTO(email, password string) *UserDTO {
+func NewUserDTO(email, password string, IsSeted bool) *UserDTO {
 	return &UserDTO{
-		Email:    email,
-		Password: password,
+		Email:      email,
+		Password:   password,
+		IsSelected: IsSeted,
 	}
 }
