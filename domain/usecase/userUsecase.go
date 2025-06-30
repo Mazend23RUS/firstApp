@@ -2,7 +2,6 @@ package implementationUseCase
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	usecase "github.com/alexey/boundary/domain/useCase"
@@ -23,16 +22,16 @@ func NewAuthUseCase(log logger.Logger) *AuthUseCase {
 
 func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) (*usecase.UserAuthoritiesOutput, error) {
 
-	if input.IsSelected == true {
-		if err := us.OpenPathGuider(c, input); err != nil {
-			return &usecase.UserAuthoritiesOutput{
-				Email:      input.Email,
-				Token:      "tokke-15654-5631-45$",
-				ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
-				IsSelected: "Поисковик открылся",
-			}, fmt.Errorf("Ошибка открытия окна", err)
-		}
-	}
+	// if input.IsSelected == true {
+	// 	if err := us.OpenPathGuider(c, input); err != nil {
+	// 		return &usecase.UserAuthoritiesOutput{
+	// 			Email:      input.Email,
+	// 			Token:      "tokke-15654-5631-45$",
+	// 			ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
+	// 			IsSelected: "Поисковик открылся",
+	// 		}, fmt.Errorf("Ошибка открытия окна", err)
+	// 	}
+	// }
 
 	if input.Email == "bboy23@mail.ru" && input.Password == "87654321" {
 		us.log.PtintInfo(c, "Введены данные Admin"+" email: "+input.Email)
@@ -58,11 +57,10 @@ func (us *AuthUseCase) OpenPathGuider(c context.Context, input dto.UserDTO) *use
 		us.log.PtintInfo(c, "Нажата кнопка открытия проводника")
 		return &usecase.UserAuthoritiesOutput{
 			Email:      input.Email,
-			Token:      "tokke-15654-5631-45$",
+			Token:      "tokke-15654-5631-46$",
 			ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
 			IsSelected: "Поисковик открылся",
 		}
-
 	}
 	return nil
 }

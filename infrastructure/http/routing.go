@@ -31,6 +31,6 @@ func SetupRouter(server serverinterface.Server, contr controllers.UserController
 func (rout *Rout) RegisterPublicRoute() {
 
 	rout.server.RegisterPublicRoute("POST", "/auth/user", rout.controller.LoginHandler)
-	// rout.server.RegisterPublicRoute("POST", "/auth/botton", rout.controller.ButtonHandler)
+	rout.server.RegisterPublicRoute("POST", "/auth/botton", rout.controller.ButtonHandler)
 
 }

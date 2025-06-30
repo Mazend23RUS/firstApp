@@ -58,3 +58,17 @@ func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	/* отправка ответа */
 	uc.response.SuccessResponse(w, tok)
 }
+
+func (uc *UserController) ButtonHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	req, err := uc.requestreader.ReadLoginRequest(r)
+	if err != nil {
+		uc.response.ErrorResponse(w, err)
+		return
+	}
+
+	tok := uc.authUseCase.OpenPathGuider(ctx, *req)
+
+	uc.response.SuccessResponse(w, tok)
+
+}
