@@ -30,11 +30,14 @@ func main() {
 	/* NewAuthUseCase() Инициализация use case */
 	authUseCase := implementationUseCase.NewAuthUseCase(log)
 
-	// /* Инициализация Валидатора */
+	/* NewValidator() Инициализация Валидатора */
 	validat := validator.NewValidator()
 
+	/* Инициализация errorHandler */
+	errhand := renderequests.NewErrorStatus()
+
 	/* NewController() инициализация контроллера */
-	contro := controllers.NewController(log, validat, authUseCase, readr, respo)
+	contro := controllers.NewController(log, validat, authUseCase, readr, respo, errhand)
 
 	/* NewGinServer() инициализация сервера */
 	ser := server.NewGinServer()

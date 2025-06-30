@@ -33,3 +33,8 @@ func mapErrorToStatus(err error) int {
 	}
 
 }
+
+func (er *ErrorStatus) HandlerError(w http.ResponseWriter, err error) {
+	w.WriteHeader(mapErrorToStatus(err))
+
+}

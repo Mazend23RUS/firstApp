@@ -9,7 +9,7 @@ import (
 /* UserUseCases объединяет все сценарии работы с пользователем */
 type UserUsecase interface {
 	GetUserAuthorities(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
-	OpenPathGuider(ctx context.Context, input dto.UserDTO) *UserAuthoritiesOutput
+	OpenPathGuider(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
 }
 
 /* GetUserAuthoritiesOutput - выходные данные авторизации */
