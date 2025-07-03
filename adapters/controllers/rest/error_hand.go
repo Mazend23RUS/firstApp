@@ -1,4 +1,4 @@
-package renderequests
+package readerequests
 
 import (
 	"errors"

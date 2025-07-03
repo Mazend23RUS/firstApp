@@ -23,7 +23,7 @@ func NewAuthUseCase(log logger.Logger) *AuthUseCase {
 func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) (*usecase.UserAuthoritiesOutput, error) {
 
 	if input.Email == "bboy23@mail.ru" && input.Password == "87654321" {
-		us.log.PtintInfo(c, "Введены данные Admin"+" email: "+input.Email)
+		us.log.PrintInfo(c, "Введены данные Admin"+" email: "+input.Email)
 		return &usecase.UserAuthoritiesOutput{
 			Email:     input.Email,
 			Role:      "Admin",
@@ -32,7 +32,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) 
 		}, nil
 	}
 
-	us.log.PtintInfo(c, "Введены данные для user")
+	us.log.PrintInfo(c, "Введены данные для user")
 	return &usecase.UserAuthoritiesOutput{
 		Email:     input.Email,
 		Role:      "user",
@@ -43,7 +43,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input dto.UserDTO) 
 
 func (us *AuthUseCase) OpenPathGuider(c context.Context, input dto.UserDTO) (*usecase.UserAuthoritiesOutput, error) {
 	if input.IsSelected == true {
-		us.log.PtintInfo(c, "Нажата кнопка открытия проводника")
+		us.log.PrintInfo(c, "Нажата кнопка открытия проводника")
 
 		return &usecase.UserAuthoritiesOutput{
 			Email:      input.Email,
@@ -52,5 +52,5 @@ func (us *AuthUseCase) OpenPathGuider(c context.Context, input dto.UserDTO) (*us
 			IsSelected: "Поисковик открылся",
 		}, nil
 	}
-	return nil, fmt.Errorf("Ошибка при открытии окна ", c)
+	return nil, fmt.Errorf("Ошибка при открытии окна %v", c)
 }

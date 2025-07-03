@@ -1,4 +1,4 @@
-package renderequests
+package readerequests
 
 import (
 	"encoding/json"
@@ -7,13 +7,13 @@ import (
 
 	"github.com/alexey/adapters/controllers/rest/requests"
 	"github.com/alexey/boundary/dto"
-	"github.com/go-playground/validator/v10"
+	"github.com/alexey/infrastructure/http/validator"
 )
 
-type JSONRequestReader struct{ validator *validator.Validate }
+type JSONRequestReader struct{ validator *validator.Validator }
 
 func NewJSONRequestReader() *JSONRequestReader {
-	v := validator.New()
+	v := validator.NewValidator()
 
 	return &JSONRequestReader{
 		validator: v,
@@ -27,7 +27,7 @@ func (js *JSONRequestReader) ReadLoginRequest(r *http.Request) (*dto.UserDTO, er
 		return nil, fmt.Errorf("Error decoding RenderJSONRequest()")
 	}
 
-	if err := js.validator.Struct(req); err != nil {
+	if err := js.validator.Validate(req); err != nil {
 		return nil, fmt.Errorf("validation error: %w", err)
 	}
 

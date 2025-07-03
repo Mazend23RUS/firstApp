@@ -1,15 +1,18 @@
 package server
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/alexey/pkg/logger"
+	loggerinterface "github.com/alexey/pkg/logger/interface"
 	"github.com/gin-gonic/gin"
 )
 
 /* GinServer - структура, которая инкапсулирует сервер Gin. Содержит поле engine - экземпляр Gin-движка. */
 type GinServer struct {
-	engin *gin.Engine /* gin сслка на пакет import, вызываем у пакета структуру Engine с кучей различных методов */
+	engin  *gin.Engine /* gin сслка на пакет import, вызываем у пакета структуру Engine с кучей различных методов */
+	logger loggerinterface.Logger
 }
 
 /* NewGinServer() - конструктор, который:
@@ -17,9 +20,10 @@ type GinServer struct {
 (в отличие от gin.Default(),
 который автоматически добавляет Logger и Recovery middleware) */
 
-func NewGinServer() *GinServer {
+func NewGinServer(log loggerinterface.Logger) *GinServer {
 	server := &GinServer{
-		engin: gin.New(),
+		engin:  gin.New(),
+		logger: log,
 	}
 
 	/* Добавляем глобальные middleware */
@@ -44,11 +48,14 @@ func (g *GinServer) RegisterPublicRoute(method, path string, handler http.Handle
 
 /* Start() - запускает сервер на указанном адресе (например, ":8080") */
 func (g *GinServer) Start(address string) error {
-	if err := g.engin.Run(address); err != nil {
-		logger.InitLogger().PtintInfo(&gin.Context{}, err.Error())
-		return err
+	logger := g.logger
+	logger.PrintInfo(context.Background(), "Сервер стартанул на порту "+address)
+	err := g.engin.Run(address)
+	if err != nil {
+		logger.PrintInfo(context.Background(), err.Error())
+		return fmt.Errorf("Сервер не стартанул на порту "+address, err)
 	}
-	return g.engin.Run(address)
+	return nil
 }
 
 /* AuthMiddleware() - фабрика middleware, возвращающая функцию-обработчик типа gin.HandlerFunc */

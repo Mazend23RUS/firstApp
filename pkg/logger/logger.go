@@ -11,7 +11,7 @@ func InitLogger() Logger {
 	return Logger{}
 }
 
-func (l Logger) PtintInfo(ctx context.Context, message string) {
+func (l Logger) PrintInfo(ctx context.Context, message string) {
 	log.Printf("INFO %s\n", message)
 
 }

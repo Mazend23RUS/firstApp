@@ -6,42 +6,36 @@ import (
 	usecase "github.com/alexey/boundary/domain/useCase"
 
 	"github.com/alexey/internal/interfaces"
-	"github.com/alexey/pkg/logger"
+	loggerinterface "github.com/alexey/pkg/logger/interface"
 )
 
 type BaseController struct {
-	reqvalid interfaces.RequestValidator
-	logger   logger.Logger
+	logger loggerinterface.Logger
 }
 
 type UserController struct {
 	requestreader interfaces.RequestReader
 	response      interfaces.Responderface
-	errorhand     interfaces.ErrorHandler
 	authUseCase   usecase.UserUsecase
 	BaseController
 }
 
 func NewController(
 
-	log logger.Logger,
-	valid interfaces.RequestValidator,
+	log loggerinterface.Logger,
 	auth usecase.UserUsecase,
 	requtreader interfaces.RequestReader,
 	response interfaces.Responderface,
-	errorhand interfaces.ErrorHandler,
 
 ) UserController {
 
 	return UserController{
 
 		BaseController: BaseController{
-			logger:   log,
-			reqvalid: valid,
+			logger: log,
 		}, authUseCase: auth,
 		requestreader: requtreader,
 		response:      response,
-		errorhand:     errorhand,
 	}
 }
 
@@ -51,6 +45,7 @@ func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	/* Вычитываем запрос */
 	req, err := uc.requestreader.ReadLoginRequest(r)
 	if err != nil {
+		uc.logger.PrintError(ctx, "Ошибка в чтении запроса", err)
 		uc.response.ErrorResponse(w, err)
 		return
 	}
@@ -59,7 +54,7 @@ func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	tok, err := uc.authUseCase.GetUserAuthorities(ctx, *req)
 	if err != nil {
 		uc.logger.PrintError(ctx, "Ошибка в получении ответа", err)
-		uc.errorhand.HandlerError(w, err)
+		uc.response.ErrorResponse(w, err)
 		return
 	}
 
@@ -71,6 +66,7 @@ func (uc *UserController) ButtonHandler(w http.ResponseWriter, r *http.Request) 
 	ctx := r.Context()
 	req, err := uc.requestreader.ReadLoginRequest(r)
 	if err != nil {
+		uc.logger.PrintError(ctx, "Ошибка в чтении запроса", err)
 		uc.response.ErrorResponse(w, err)
 		return
 	}
@@ -78,7 +74,7 @@ func (uc *UserController) ButtonHandler(w http.ResponseWriter, r *http.Request) 
 	tok, err := uc.authUseCase.OpenPathGuider(ctx, *req)
 	if err != nil {
 		uc.logger.PrintError(ctx, "Ошибка в получении ответа", err)
-		uc.errorhand.HandlerError(w, err)
+		uc.response.ErrorResponse(w, err)
 		return
 	}
 

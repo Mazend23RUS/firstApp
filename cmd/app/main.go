@@ -6,9 +6,7 @@ import (
 	"github.com/alexey/adapters/controllers"
 	renderequests "github.com/alexey/adapters/controllers/rest"
 
-	routing "github.com/alexey/infrastructure/http"
-	server "github.com/alexey/infrastructure/http"
-	"github.com/alexey/infrastructure/http/validator"
+	infrahttp "github.com/alexey/infrastructure/http" // Общий алиас
 
 	implementationUseCase "github.com/alexey/domain/usecase"
 	"github.com/alexey/pkg/logger"
@@ -30,22 +28,16 @@ func main() {
 	/* NewAuthUseCase() Инициализация use case */
 	authUseCase := implementationUseCase.NewAuthUseCase(log)
 
-	/* NewValidator() Инициализация Валидатора */
-	validat := validator.NewValidator()
-
-	/* Инициализация errorHandler */
-	errhand := renderequests.NewErrorStatus()
-
 	/* NewController() инициализация контроллера */
-	contro := controllers.NewController(log, validat, authUseCase, readr, respo, errhand)
+	contro := controllers.NewController(log, authUseCase, readr, respo)
 
 	/* NewGinServer() инициализация сервера */
-	ser := server.NewGinServer()
+	ser := infrahttp.NewGinServer(log)
 
 	/* SetupRouter() Инициализация router */
-	routing.SetupRouter(ser, contro)
+	infrahttp.SetupRouter(ser, contro)
 
-	log.PtintInfo(context.Background(), "Стартуем сервер на порте: 8080")
+	log.PrintInfo(context.Background(), "Попытка стартануть сервер ")
 	if err := ser.Start(port); err != nil {
 		log.PrintError(context.TODO(), "Сервер не стартанул", err)
 	}
