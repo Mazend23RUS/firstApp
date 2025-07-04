@@ -1,8 +1,7 @@
 package requests
 
 import (
-	"github.com/alexey/boundary/dto"
-	userDTO "github.com/alexey/boundary/dto"
+	userDTOforPack "github.com/alexey/boundary/dto"
 )
 
 type LoginRequest struct {
@@ -11,8 +10,8 @@ type LoginRequest struct {
 	IsSelected bool   `json:"is_selected"`
 }
 
-func (lr *LoginRequest) MapperOfRequestToDTO() *userDTO.UserDTO {
-	return dto.NewUserDTO(lr.Email, lr.Password, lr.IsSelected)
+func (lr *LoginRequest) MapperOfRequestToDTO() *userDTOforPack.UserDTO {
+	return userDTOforPack.NewUserDTO(lr.Email, lr.Password, lr.IsSelected)
 }
 
 func (pe *ParseError) Error() string {
