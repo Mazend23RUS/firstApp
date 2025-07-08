@@ -20,6 +20,7 @@ func (rw ResponseWriter) SuccessResponse(w http.ResponseWriter, data interface{}
 func (rw ResponseWriter) ErrorResponse(w http.ResponseWriter, err error) {
 	status := mapErrorToStatus(err)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(struct {
 		Error string `json:"error"`

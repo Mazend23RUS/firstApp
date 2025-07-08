@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/alexey/adapters/controllers/rest/requests"
+	errors_domain "github.com/alexey/boundary/domain/errors"
 	"github.com/alexey/boundary/dto"
 	"github.com/alexey/infrastructure/http/validator"
 )
@@ -24,11 +25,11 @@ func (js *JSONRequestReader) ReadLoginRequest(r *http.Request) (*dto.UserDTO, er
 	var req requests.LoginRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		return nil, fmt.Errorf("Error decoding RenderJSONRequest()")
+		return nil, fmt.Errorf("%w: %v", errors_domain.ErrValidationFailed, err)
 	}
 
 	if err := js.validator.Validate(req); err != nil {
-		return nil, fmt.Errorf("validation error: %w", err)
+		return nil, fmt.Errorf("%w: %v", errors_domain.ErrValidationFailed, err)
 	}
 
 	return req.MapperOfRequestToDTO(), nil
