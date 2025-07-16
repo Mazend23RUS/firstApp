@@ -7,14 +7,15 @@ import (
 
 	usecase "github.com/alexey/boundary/domain/useCase"
 	"github.com/alexey/boundary/dto"
-	"github.com/alexey/pkg/logger"
+
+	loggerinterface "github.com/alexey/pkg/logger/interface"
 )
 
 type AuthUseCase struct {
-	log logger.Logger
+	log loggerinterface.Logger
 }
 
-func NewAuthUseCase(log logger.Logger) *AuthUseCase {
+func NewAuthUseCase(log loggerinterface.Logger) *AuthUseCase {
 	return &AuthUseCase{
 		log: log,
 	}

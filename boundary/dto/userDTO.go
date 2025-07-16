@@ -2,7 +2,7 @@ package dto
 
 type UserDTO struct {
 	ID          int    `json:"id,omitempty"`
-	Password    string `json:"password" validate:"required,password"`
+	Password    string `json:"password" validate:"required,min=8"`
 	Name        string `json:"name,omitempty"`
 	Role        string `json:"role,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
