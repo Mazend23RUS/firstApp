@@ -35,7 +35,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 		input.InitRole("Admin", []string{"read, write"})
 		newuser, err := models.NewUser(input.Email, input.Password, "Новый пользователь admin", input.Roles, input.IsSelected)
 		if err != nil {
-			return nil, fmt.Errorf("Не создался юзер", err)
+			return nil, fmt.Errorf("не создался юзер %w", err)
 		}
 		fmt.Println(newuser)
 		// Сохранение юзера пока не работает, нужно подключение к БД
@@ -53,7 +53,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 	input.InitRole("User", []string{"read"})
 	newuser, err := models.NewUser(input.Email, input.Password, "Новый пользователь с правами user", input.Roles, input.IsSelected)
 	if err != nil {
-		return nil, fmt.Errorf("Не создался юзер %w", err)
+		return nil, fmt.Errorf("не создался юзер %w", err)
 	}
 	fmt.Println(newuser)
 	// Сохранение юзера пока не работает, нужно подключение к БД
@@ -71,7 +71,7 @@ func (us *AuthUseCase) OpenPathGuider(c context.Context, input *models.User) (*u
 	// Пока не работает нужно будет подключение к БД
 	userFromDB, err := us.userRepo.GetUserByEmail(c, input.Email)
 	if err != nil {
-		return nil, fmt.Errorf("Не удалось получить пользователя из БД %w", err)
+		return nil, fmt.Errorf("не удалось получить пользователя из БД %w", err)
 	}
 
 	if input.IsSelected == true && userFromDB.Status == "Active" {

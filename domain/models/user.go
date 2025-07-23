@@ -34,15 +34,15 @@ func NewUser(
 ) (*User, error) {
 
 	if email == "" {
-		return nil, fmt.Errorf("Некоректный email")
+		return nil, fmt.Errorf("некоректный email")
 	}
 
 	if len(passwors) < 8 || passwors == "" {
-		return nil, fmt.Errorf("Не соответсвует требованием длинны пароля")
+		return nil, fmt.Errorf("не соответсвует требованием длинны пароля")
 	}
 
 	if name == "" {
-		return nil, fmt.Errorf("Имя роли не может быть пустым")
+		return nil, fmt.Errorf("имя роли не может быть пустым")
 	}
 
 	uuid := common.GetUUID()
