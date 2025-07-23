@@ -3,18 +3,20 @@ package main
 import (
 	"context"
 
-	"github.com/alexey/adapters/controllers"
-	renderequests "github.com/alexey/adapters/controllers/rest"
+	"github.com/alexey/firstApp/adapters/controllers"
+	renderequests "github.com/alexey/firstApp/adapters/controllers/rest"
 
-	infrahttp "github.com/alexey/infrastructure/http" // Общий алиас
+	infrahttp "github.com/alexey/firstApp/infrastructure/http" // Общий алиас
 
-	implementationUseCase "github.com/alexey/domain/usecase"
-	"github.com/alexey/pkg/logger"
+	implementationUseCase "github.com/alexey/firstApp/domain/usecase"
+	"github.com/alexey/firstApp/pkg/logger"
 )
 
 func main() {
 
 	port := ":8080"
+
+	
 
 	/* InitLogger() Инициализация логгера */
 	log := logger.InitLogger()

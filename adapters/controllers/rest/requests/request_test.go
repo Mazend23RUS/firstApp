@@ -3,8 +3,9 @@ package requests
 import (
 	"testing"
 
-	"github.com/alexey/boundary/dto"
-	"github.com/alexey/infrastructure/http/validator"
+	"github.com/alexey/firstApp/boundary/dto"
+	"github.com/alexey/firstApp/infrastructure/http/validator"
+
 	"github.com/stretchr/testify/assert"
 )
 

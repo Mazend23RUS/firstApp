@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/alexey/adapters/controllers/rest/requests"
-	errors_domain "github.com/alexey/boundary/domain/errors"
-	"github.com/alexey/boundary/dto"
-	"github.com/alexey/infrastructure/http/validator"
+	"github.com/alexey/firstApp/adapters/controllers/rest/requests"
+	errors_domain "github.com/alexey/firstApp/boundary/domain/errors"
+	"github.com/alexey/firstApp/boundary/dto"
+	"github.com/alexey/firstApp/infrastructure/http/validator"
 )
 
 type JSONRequestReader struct{ validator *validator.Validator }

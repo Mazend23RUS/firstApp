@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/alexey/adapters/controllers"
-	serverinterface "github.com/alexey/infrastructure/restServer"
+	"github.com/alexey/firstApp/adapters/controllers"
+	serverinterface "github.com/alexey/firstApp/infrastructure/restServer"
 )
 
 type Routing interface {

@@ -3,7 +3,7 @@ package interfaces
 import (
 	"net/http"
 
-	"github.com/alexey/boundary/dto"
+	"github.com/alexey/firstApp/boundary/dto"
 )
 
 type RequestReader interface {

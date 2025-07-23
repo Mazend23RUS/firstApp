@@ -3,14 +3,15 @@ package controllers
 import (
 	"net/http"
 
-	usecase "github.com/alexey/boundary/domain/useCase"
-
-	"github.com/alexey/internal/interfaces"
-	loggerinterface "github.com/alexey/pkg/logger/interface"
+	usecase "github.com/alexey/firstApp/boundary/domain/useCase"
+	"github.com/alexey/firstApp/boundary/dto"
+	"github.com/alexey/firstApp/internal/interfaces"
+	loggerinterface "github.com/alexey/firstApp/pkg/logger/interface"
 )
 
 type BaseController struct {
 	logger loggerinterface.Logger
+	dto    *dto.UserDTO
 }
 
 type UserController struct {
@@ -50,8 +51,10 @@ func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := dto.ModelUserFromDTO(req)
+
 	/* Получаем ответ */
-	tok, err := uc.authUseCase.GetUserAuthorities(ctx, *req)
+	tok, err := uc.authUseCase.GetUserAuthorities(ctx, user)
 	if err != nil {
 		uc.logger.PrintError(ctx, "Ошибка в получении ответа", err)
 		uc.response.ErrorResponse(w, err)
@@ -71,7 +74,9 @@ func (uc *UserController) ButtonHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	tok, err := uc.authUseCase.OpenPathGuider(ctx, *req)
+	user := dto.ModelUserFromDTO(req)
+
+	tok, err := uc.authUseCase.OpenPathGuider(ctx, user)
 	if err != nil {
 		uc.logger.PrintError(ctx, "Ошибка в получении ответа", err)
 		uc.response.ErrorResponse(w, err)

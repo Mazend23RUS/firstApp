@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/alexey/pkg/logger"
+	"github.com/alexey/firstApp/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
 

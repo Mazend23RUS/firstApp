@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	errors_domain "github.com/alexey/boundary/domain/errors"
+	errors_domain "github.com/alexey/firstApp/boundary/domain/errors"
 	"github.com/stretchr/testify/assert"
 )
 

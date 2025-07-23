@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	loggerinterface "github.com/alexey/pkg/logger/interface"
+	loggerinterface "github.com/alexey/firstApp/pkg/logger/interface"
 	"github.com/gin-gonic/gin"
 )
 

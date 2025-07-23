@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	errors_domain "github.com/alexey/boundary/domain/errors"
+	errors_domain "github.com/alexey/firstApp/boundary/domain/errors"
 )
 
 type ErrorStatus struct{}

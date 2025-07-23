@@ -6,14 +6,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	readerequests "github.com/alexey/adapters/controllers/rest"
-	implementationUseCase "github.com/alexey/domain/usecase"
-
-	"github.com/alexey/pkg/logger"
+	readerequests "github.com/alexey/firstApp/adapters/controllers/rest"
+	implementationUseCase "github.com/alexey/firstApp/domain/usecase"
+	"github.com/alexey/firstApp/pkg/logger"
 )
 
 func TestController_LoginHandler(t *testing.T) {
 	// Инициализация зависимостей
+
 	log := logger.InitLogger()
 	reader := readerequests.NewJSONRequestReader()
 	responder := readerequests.NewResponseWriter()

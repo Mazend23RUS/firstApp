@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/alexey/boundary/dto"
+	"github.com/alexey/firstApp/boundary/dto"
 	"github.com/stretchr/testify/assert"
 )
 

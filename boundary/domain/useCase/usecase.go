@@ -3,13 +3,16 @@ package usecase
 import (
 	"context"
 
-	"github.com/alexey/boundary/dto"
+	"github.com/alexey/firstApp/domain/models"
 )
 
 /* UserUseCases объединяет все сценарии работы с пользователем */
 type UserUsecase interface {
-	GetUserAuthorities(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
-	OpenPathGuider(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
+	// GetUserAuthorities(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
+	// OpenPathGuider(ctx context.Context, input dto.UserDTO) (*UserAuthoritiesOutput, error)
+
+	GetUserAuthorities(ctx context.Context, input *models.User) (*UserAuthoritiesOutput, error)
+	OpenPathGuider(ctx context.Context, input *models.User) (*UserAuthoritiesOutput, error)
 }
 
 /* GetUserAuthoritiesOutput - выходные данные авторизации */

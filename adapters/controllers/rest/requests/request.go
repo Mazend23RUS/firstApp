@@ -1,7 +1,7 @@
 package requests
 
 import (
-	userDTOforPack "github.com/alexey/boundary/dto"
+	userDTOforPack "github.com/alexey/firstApp/boundary/dto"
 )
 
 type LoginRequest struct {
