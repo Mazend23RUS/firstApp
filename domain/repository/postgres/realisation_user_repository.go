@@ -23,7 +23,8 @@ func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (*mod
 
 	var user models.User
 
-	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Status)
+	// err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Status)
+	err := row.Scan(user.Id(), user.Name(), user.Email(), user.Password(), user.Status())
 	if err != nil {
 		return nil, fmt.Errorf("Ошибка получения user")
 	}
@@ -47,13 +48,13 @@ func (u *UserRepository) Save(ctc context.Context, user *models.User) error {
 
 	err := u.db.QueryRowContext(ctc,
 		quiry,
-		user.ID,
+		user.Id,
 		user.Password,
 		user.Email,
 		user.Name,
 		user.Roles,
 		user.Status,
-		user.IsSelected).Scan(&user.ID)
+		user.IsSelected).Scan(user.Id())
 
 	if err != nil {
 		return fmt.Errorf("Не получилось сохранить пользователя %w", err)

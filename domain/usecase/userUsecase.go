@@ -29,11 +29,11 @@ func NewAuthUseCase(log loggerinterface.Logger) *AuthUseCase {
 
 func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User) (*usecase.UserAuthoritiesOutput, error) {
 
-	if input.Email == "bboy23@mail.ru" && input.Password == "87654321" {
-		us.log.PrintInfo(c, "Введены данные Admin"+" email: "+input.Email)
+	if input.Email() == "bboy23@mail.ru" && input.Password() == "87654321" {
+		us.log.PrintInfo(c, "введены данные Admin"+" email: "+input.Email())
 
 		input.InitRole("Admin", []string{"read, write"})
-		newuser, err := models.NewUser(input.Email, input.Password, "Новый пользователь admin", input.Roles, input.IsSelected)
+		newuser, err := models.NewUser(input.Email(), input.Password(), "новый пользователь admin", input.Roles(), input.IsSelected())
 		if err != nil {
 			return nil, fmt.Errorf("не создался юзер %w", err)
 		}
@@ -41,7 +41,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 		// Сохранение юзера пока не работает, нужно подключение к БД
 		// us.userRepo.Save(c, newuser)
 		return &usecase.UserAuthoritiesOutput{
-			Email:     input.Email,
+			Email:     input.Email(),
 			Role:      "Admin",
 			Token:     "tokke-15654-5631-45$",
 			ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
@@ -49,9 +49,9 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 
 	}
 
-	us.log.PrintInfo(c, "Введены данные для user")
+	us.log.PrintInfo(c, "введены данные для user")
 	input.InitRole("User", []string{"read"})
-	newuser, err := models.NewUser(input.Email, input.Password, "Новый пользователь с правами user", input.Roles, input.IsSelected)
+	newuser, err := models.NewUser(input.Email(), input.Password(), "новый пользователь с правами user", input.Roles(), input.IsSelected())
 	if err != nil {
 		return nil, fmt.Errorf("не создался юзер %w", err)
 	}
@@ -59,7 +59,7 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 	// Сохранение юзера пока не работает, нужно подключение к БД
 	// us.userRepo.Save(c, newuser)
 	return &usecase.UserAuthoritiesOutput{
-		Email:     input.Email,
+		Email:     input.Email(),
 		Role:      "user",
 		Token:     "168456ewq",
 		ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
@@ -69,20 +69,20 @@ func (us *AuthUseCase) GetUserAuthorities(c context.Context, input *models.User)
 func (us *AuthUseCase) OpenPathGuider(c context.Context, input *models.User) (*usecase.UserAuthoritiesOutput, error) {
 
 	// Пока не работает нужно будет подключение к БД
-	userFromDB, err := us.userRepo.GetUserByEmail(c, input.Email)
+	userFromDB, err := us.userRepo.GetUserByEmail(c, input.Email())
 	if err != nil {
 		return nil, fmt.Errorf("не удалось получить пользователя из БД %w", err)
 	}
 
-	if input.IsSelected == true && userFromDB.Status == "Active" {
-		us.log.PrintInfo(c, "Нажата кнопка открытия проводника")
+	if input.IsSelected() == true && userFromDB.Status() == "Active" {
+		us.log.PrintInfo(c, "нажата кнопка открытия проводника")
 
 		return &usecase.UserAuthoritiesOutput{
-			Email:      input.Email,
+			Email:      input.Email(),
 			Token:      "tokke-15654-5631-46$",
 			ExpiresAt:  time.Now().Add(12 * time.Hour).Unix(),
-			IsSelected: "Поисковик открылся",
+			IsSelected: "поисковик открылся",
 		}, nil
 	}
-	return nil, fmt.Errorf("Ошибка при открытии окна %v", c)
+	return nil, fmt.Errorf("ошибка при открытии окна %w", err)
 }

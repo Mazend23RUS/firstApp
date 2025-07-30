@@ -25,19 +25,20 @@ func NewUserDTO(email, password string, IsSeted bool) *UserDTO {
 }
 
 func ModelUserFromDTO(dto *UserDTO) *models.User {
-	return &models.User{
-		ID:         dto.ID,
-		Email:      dto.Email,
-		Password:   dto.Password,
-		Roles:      dto.Role,
-		IsSelected: dto.IsSelected,
-	}
+	return models.NewUserModelFromDTO(
+		dto.ID,
+		dto.Name,
+		dto.Email,
+		dto.Password,
+		dto.Role,
+		dto.IsSelected,
+	)
 }
 
 func DTOFromModel(user *models.User) *UserDTO {
 	return &UserDTO{
-		ID:       user.ID,
-		Email:    user.Email,
-		Password: user.Password,
+		ID:       user.Id(),
+		Email:    user.Email(),
+		Password: user.Password(),
 	}
 }

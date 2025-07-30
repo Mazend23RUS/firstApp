@@ -20,11 +20,12 @@ func TestUseCaseImplementation_GetAuthorities(t *testing.T) {
 		expextedBody *usecase.UserAuthoritiesOutput
 	}{
 		{
-			name: "Тестирование получения авторизации Admin",
-			model: &models.User{
-				Email:    "bboy23@mail.ru",
-				Password: "87654321",
-			},
+			name:  "Тестирование получения авторизации Admin",
+			model: models.NewModelForTest("bboy23@mail.ru", "87654321"),
+			// model: &models{
+			// 	Email:    "bboy23@mail.ru",
+			// 	Password: "87654321",
+			// },
 			wanterr: false,
 			expextedBody: &usecase.UserAuthoritiesOutput{
 				Email: "bboy23@mail.ru",
@@ -33,11 +34,12 @@ func TestUseCaseImplementation_GetAuthorities(t *testing.T) {
 			},
 		},
 		{
-			name: "Тестирование получения авторизации User",
-			model: &models.User{
-				Email:    "test@example.com",
-				Password: "password123",
-			},
+			name:  "Тестирование получения авторизации User",
+			model: models.NewModelForTest("test@example.com", "password123"),
+			// model: &models.User{
+			// 	Email:    "test@example.com",
+			// 	Password: "password123",
+			// },
 			expextedBody: &usecase.UserAuthoritiesOutput{
 				Email: "test@example.com",
 				Token: "168456ewq",
