@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/alexey/firstApp/adapters/controllers"
+
+	"github.com/alexey/firstApp/adapters/controllers/fanout"
 	renderequests "github.com/alexey/firstApp/adapters/controllers/rest"
 
 	infrahttp "github.com/alexey/firstApp/infrastructure/http" // Общий алиас
@@ -16,10 +19,24 @@ func main() {
 
 	port := ":8080"
 
-	
-
 	/* InitLogger() Инициализация логгера */
 	log := logger.InitLogger()
+
+	/* NewZapLogger() Инициализация zap логгера */
+	zaplog, _ := logger.NewZapLogger()
+
+	// Регистрация логгеров
+	logReg := logger.NewRegisteredLog()
+	logReg.RegisterLogger("stdlog", log)
+	logReg.RegisterLogger("zap", zaplog)
+
+	fmt.Println("смотрим что лежит в мапе ", logReg.GetAllRegLogger())
+
+	messageChan := make(chan interface{}, 100)
+	splitter := fanout.NewSplitter[interface{}](100, logReg)
+
+	// Запуск обработки входящих сообщений
+	splitter.Start(messageChan)
 
 	/* NewJSONRequestReader() инициализация читателя запросов */
 	readr := renderequests.NewJSONRequestReader()
@@ -31,7 +48,7 @@ func main() {
 	authUseCase := implementationUseCase.NewAuthUseCase(log)
 
 	/* NewController() инициализация контроллера */
-	contro := controllers.NewController(log, authUseCase, readr, respo)
+	contro := controllers.NewController(log, authUseCase, readr, respo, messageChan)
 
 	/* NewGinServer() инициализация сервера */
 	ser := infrahttp.NewGinServer(log)

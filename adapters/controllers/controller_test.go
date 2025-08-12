@@ -13,12 +13,12 @@ import (
 
 func TestController_LoginHandler(t *testing.T) {
 	// Инициализация зависимостей
-
+	chanel := make(chan interface{})
 	log := logger.InitLogger()
 	reader := readerequests.NewJSONRequestReader()
 	responder := readerequests.NewResponseWriter()
 	authUseCase := implementationUseCase.NewAuthUseCase(log)
-	controller := NewController(log, authUseCase, reader, responder)
+	controller := NewController(log, authUseCase, reader, responder, chanel)
 
 	tests := []struct {
 		name         string
@@ -64,12 +64,13 @@ func TestController_LoginHandler(t *testing.T) {
 }
 
 func TestController_OpenPathGuader(t *testing.T) {
+	chanel := make(chan interface{})
 	log := logger.InitLogger()
 	requestreader := readerequests.NewJSONRequestReader()
 	response := readerequests.NewResponseWriter()
 	auth := implementationUseCase.NewAuthUseCase(log)
 
-	controller := NewController(log, auth, requestreader, response)
+	controller := NewController(log, auth, requestreader, response, chanel)
 
 	tests := []struct {
 		name         string

@@ -71,7 +71,7 @@ func NewName(value string) (Name, error) {
 	runes := []rune(value)
 
 	if !unicode.IsUpper(runes[0]) {
-		return "", fmt.Errorf("firs simbol bust be Upper ")
+		return "", fmt.Errorf("firs simbol must be Upper ")
 	}
 
 	return Name(value), nil
@@ -130,7 +130,7 @@ func NewUser(
 	// 	return nil, fmt.Errorf("некоректный email")
 	// }
 
-	// if len(passwors) < 8 || passwors == "" {
+	// if len(password) < 8 || password == "" {
 	// 	return nil, fmt.Errorf("не соответсвует требованием длинны пароля")
 	// }
 
