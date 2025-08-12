@@ -54,7 +54,7 @@ func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sendToChannel("Начало обработки запроса LoginHandler")
+	sendToChannel("Начало обработки запроса LoginHandler ")
 
 	/* Вычитываем запрос */
 	req, err := uc.requestreader.ReadLoginRequest(r)

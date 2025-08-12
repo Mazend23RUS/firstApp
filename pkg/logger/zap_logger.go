@@ -24,12 +24,12 @@ func NewZapLogger() (*ZapLogger, error) {
 }
 
 func (z *ZapLogger) PrintInfo(ctx context.Context, msg string) {
-	z.zaplog.Info("INFO работает логгер zap: " + msg + "\n")
+	z.zaplog.Info("INFO работает логгер zap: \n" + msg)
 
 }
 
 func (z *ZapLogger) PrintError(ctx context.Context, msg string, err error) {
-	z.zaplog.Error("ERROR работает логгер zap: " + msg + "\n")
+	z.zaplog.Error("ERROR работает логгер zap: \n" + msg)
 }
 
 func (z *ZapLogger) Sync() error {
